@@ -1,0 +1,12 @@
+{
+  "name": "SaveDataByMongoose",
+  "version": "1.0.0",
+  "main": "main.js",
+  "license": "MIT",
+  "dependencies": {
+    "mongoose": "^5.4.16"
+  },
+  "scripts": {
+    "start": "node main.js"
+  }
+}
