@@ -1,22 +1,22 @@
 # SaveDataByMongoose
 
-## To use this module simply create a symlink using from within this module project directory by using below command -
+#### To use this module simply create a symlink using from within this module project directory by using below command -
 
-### >> yarn link
+###### >> yarn link
 
-## Then move to the directory of project where you want to use this module and use below command -
+#### Then move to the directory of project where you want to use this module and use below command -
 
-### >> yarn link SaveDataByMongoose
+###### >> yarn link SaveDataByMongoose
 
-## Also dont forget to import this as dependency in index.js as below - 
+#### Also dont forget to import this as dependency in index.js as below - 
 
-### var savebymongoose = require('SaveDataByMongoose')
+###### var savebymongoose = require('SaveDataByMongoose')
 
 To use this module simply use method - 
 
-### saveToDB(connectionString, schemaObj, modelName, data)
+###### saveToDB(connectionString, schemaObj, modelName, data)
 
-##Example -
+### Example -
   ```Javascript
   (async()=>{
     
