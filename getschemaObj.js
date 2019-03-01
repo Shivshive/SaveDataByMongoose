@@ -1,6 +1,6 @@
 let schema = {
 
-    provider :{
+    pvdr :{
         type: String,
         require: true,
         trim : true,
@@ -8,11 +8,11 @@ let schema = {
             validator : (value)=> {
                 return value != "" && value != " "; 
             },
-            message : "Provider Name cannot be blank"
+            message : "Provider cannot be blank"
         }
     },
 
-    productName :{
+    pname :{
         type: String,
         require: true,
         trim : true,
@@ -24,7 +24,7 @@ let schema = {
         }
     },
 
-    releaseVersion :{
+    rv :{
         type: String,
         require: true,
         trim : true,
@@ -32,11 +32,11 @@ let schema = {
             validator : (value)=> {
                 return value != "" && value != " "; 
             },
-            message : "Release Version cannot be blank"
+            message : "Version cannot be blank"
         }
     },
 
-    appUrl :{
+    apurl :{
         type: String,
         require: true,
         trim : true,
@@ -44,11 +44,11 @@ let schema = {
             validator : (value)=> {
                 return value != "" && value != " "; 
             },
-            message : "Application URL cannot be blank"
+            message : "Application cannot be blank"
         }
     },
 
-    serviceUrl :{
+    surl :{
         type: String,
         require: true,
         trim : true,
@@ -56,11 +56,11 @@ let schema = {
             validator : (value)=> {
                 return value != "" && value != " "; 
             },
-            message : "Service URL cannot be blank"
+            message : "Service cannot be blank"
         }
     },
 
-    gitUrl :{
+    gurl :{
         type: String,
         require: true,
         trim : true,
@@ -72,14 +72,14 @@ let schema = {
         }
     },
 
-    releaseDate :{
+    rdate :{
         name: "Release Date",
         type: Date,
         require: false,
         trim : true
     },
 
-    currentDate :{
+    cDate :{
         type: Date,
         require: false,
         trim : true,

@@ -108,7 +108,7 @@ let showErrors = (e) => {
 //     };
 
 //     try {
-//         let result = await saveToDB('mongodb://localhost/surroundproducts', schema, modelname, data);
+//         let result = await saveToDB('mongodb://localhost/st', schema, modelname, data);
 //         console.log(JSON.stringify(result, false, 3));
 
 //     } catch (e) {
