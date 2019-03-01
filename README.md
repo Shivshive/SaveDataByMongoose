@@ -42,7 +42,7 @@ To use this module simply use method -
     }
     
     try{
-      let result = saveToDB("mongodb://localhost/dbname",schemaObj,"collectionName",data);
+      let result = await saveToDB("mongodb://localhost/dbname",schemaObj,"collectionName",data);
     }catch(e){
       let errorsArray = await showErrors(e);
       for(let error in errorsArray){
