@@ -17,7 +17,7 @@ To use this module simply use method -
 ### saveToDB(connectionString, schemaObj, modelName, data)
 
 ##Example -
-  ```
+  ```Javascript
   (async()=>{
     
     let schemaObj = {
