@@ -18,6 +18,9 @@ To use this module simply use method -
 
 ### Example -
   ```Javascript
+  
+  let saveByMongoose = require('SaveDataByMongoose');
+  
   (async()=>{
     
     let schemaObj = {
@@ -42,9 +45,9 @@ To use this module simply use method -
     }
     
     try{
-      let result = await saveToDB("mongodb://localhost/dbname",schemaObj,"collectionName",data);
+      let result = await saveByMongoose.saveToDB("mongodb://localhost/dbname",schemaObj,"collectionName",data);
     }catch(e){
-      let errorsArray = await showErrors(e);
+      let errorsArray = await saveByMongoose.showErrors(e);
       for(let error in errorsArray){
         console.log(errorsArray[error]);
       }
