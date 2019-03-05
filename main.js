@@ -1,122 +1,125 @@
-const mongoose = require('mongoose');
-const schemaObj = require('./getschemaObj.js');
+const mongoose = require('mongoose')
 
-let saveToDB = async (connectionString, schemaObj, modelName, data) => {
+let connect = conString => {
+  mongoose.connect(conString,{useNewUrlParser:true});
+  return mongoose.connection;
+}
 
-    return new Promise((resolve, reject) => {
-
-        mongoose.connect(connectionString, { useNewUrlParser: true });
-        var db = mongoose.connection;
-
-        db.once('open', function () {
-            console.log("Database is ready now");
-            getModelReference(schemaObj, modelName).then((modelReference) => {
-                getCompiledModel(modelReference, data).then((cmodel) => {
-                    cmodel.save((err, res) => {
-                        if (err) {
-                            mongoose.disconnect(mongoose.connection);
-                            reject({
-                                key: "Model Save Error",
-                                message: err
-                            })
-                        } else {
-                            mongoose.disconnect(mongoose.connection);
-                            resolve({
-                                key: "Model Saved",
-                                message: res
-                            })
-                        }
-                    })
-
-                }).catch((err) => {
-                    mongoose.disconnect(mongoose.connection);
-                    reject({
-                        key: "Model Compilation Error",
-                        message: err
-                    })
-                })
-
-            }).catch((err) => {
-                mongoose.disconnect(mongoose.connection);
-                reject({
-                    key: "Model Error",
-                    message: err
-                })
-            })
-
-        });
-
-        db.on('error', function (err) {
-            console.log(err);
-            reject({
-                key: "db connection",
-                message: err
-            })
-        })
+let disconnect = con => {
+  return new Promise((resolve, reject) => {
+    mongoose.connection.close(err => {
+      if (err) {
+        console.log('Error in closing connection')
+      }
     })
+  })
+}
+
+let compile = (schemaDef, modelName, data) => {
+  var model
+  let schema = mongoose.Schema(schemaDef)
+  let keys = Object.keys(mongoose.models)
+  if (keys.indexOf(modelName) !== -1) {
+    model = mongoose.model(modelName)
+  } else {
+    model = mongoose.model(modelName, schemaDef)
+  }
+  var document = new model(data)
+  return document
+}
+
+let insert = document => {
+  return new Promise((resolve, reject) => {
+    document.save((err, response) => {
+      if (err) {
+        reject(err)
+      } else {
+        resolve(response)
+      }
+    })
+  })
 }
 
 
-let getCompiledModel = (modelReference, data) => {
+async function perform (data) {
+  let con = await connect('mongodb://localhost/demodb')
+  let cmodel = await compile(
+    {
+      name: { type: String }
+    },
+    'development',
+    {
+      name: 'john'
+    }
+  )
 
-    return new Promise((resolve, reject) => {
-        let cmodel = new modelReference(data);
-        resolve(cmodel);
-    })
+  let dmodel = await compile(
+    {
+      name: { type: String }
+    },
+    'development',
+    {
+      name: 'jack'
+    }
+  )
+
+  let result1 = await insert(cmodel)
+  console.log(result1)
+
+  let result2 = await insert(dmodel)
+  console.log(result2)
 }
 
-let getModelReference = async (schemaObj, modelName) => {
 
-    return new Promise((resolve, reject) => {
-        let schema = new mongoose.Schema(schemaObj);
-        resolve(mongoose.model(modelName, schema));
-    })
 
+async function perform2 (data) {
+    let con = await connect('mongodb://localhost/demodb')
+    let cmodel = await compile(
+      {
+        name: { type: String }
+      },
+      'development',
+      {
+        name: 'john'
+      }
+    )
+  
+    let dmodel = await compile(
+      {
+        name: { type: String }
+      },
+      'development',
+      {
+        name: 'jack'
+      }
+    )
+  
+    let result1 = await insert(cmodel)
+    console.log(result1)
+  
+    let result2 = await insert(dmodel)
+    console.log(result2)
+  }
+
+// perform().catch((e)=>{
+//     console.log(e);
+// })
+
+// perform2().catch((e)=>{
+//     console.log(e);
+// })
+
+// setInterval(() => {
+//     perform().catch((e)=>{
+//         console.log(e);
+//     })
+//     perform2().catch((e)=>{
+//         console.log(e);
+//     })
+// }, 3000);
+module.exports = {
+  connect : connect,
+  compile : compile,
+  insert : insert,
+  disconnect : disconnect
 }
-
-let showErrors = (e) => {
-
-    return new Promise((resolve, reject) => {
-        let errorArray = [];
-        if (e.message.errors) {
-            let errorsObj = e.message.errors;
-            for (const key in errorsObj) {
-                if (errorsObj.hasOwnProperty(key)) {
-                    // console.log(key);
-                    // console.log(errorsObj[key].message);
-                    errorArray.push(errorsObj[key].message);
-                }
-            }
-        }
-        resolve(errorArray);
-    })
-}
-
-// For Testing Purpose ..
-
-// (async () => {
-//     let schema = schemaObj;
-//     let modelname = "ReleaseDetails";
-//     let data = {
-//         provider: "test",
-//         productName: "test",
-//         releaseVersion: "test",
-//         appUrl: "test",
-//         serviceUrl: "test",
-//         gitUrl: "test",
-//         releaseDate: ""
-//     };
-
-//     try {
-//         let result = await saveToDB('mongodb://localhost/st', schema, modelname, data);
-//         console.log(JSON.stringify(result, false, 3));
-
-//     } catch (e) {
-//         console.log(JSON.stringify(e, false, 3));
-//         let allErrorsArray = await showErrors(e);
-//         for (const key in allErrorsArray) {
-//             console.log(allErrorsArray[key]);
-//         }
-//     }
-// })();
-
