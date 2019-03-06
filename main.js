@@ -15,6 +15,30 @@ let disconnect = con => {
   })
 }
 
+let showErrors = (e)=>{
+
+  let errorsArray = [];
+  
+  let errors = e.errors;
+
+  for (const key in errors) {
+    // console.log(key);
+    // console.log(JSON.stringify(errors[key],false,3));
+
+    if(typeof(errors[key]) == 'object'){
+
+      for (const i in errors[key]) {
+        // console.log(i);
+        if(i == "message"){
+          errorsArray.push(errors[key][i]);
+          // console.log(errors[key][i]);
+        }
+      }
+    }
+  }
+  return errorsArray;
+}
+
 let compile = (schemaDef, modelName, data) => {
   var model
   let schema = mongoose.Schema(schemaDef)
@@ -45,65 +69,76 @@ async function perform (data) {
   let con = await connect('mongodb://localhost/demodb')
   let cmodel = await compile(
     {
-      name: { type: String }
+      name: { 
+        type: String,
+        require : true,
+        validate : {
+          validator : (val)=>{
+            return val!="" && val!=" "
+          },message : "Name is required"
+        }
+        
+      },
+      age: { 
+        type: Number,
+        require : true,
+        validate : {
+          validator : (val)=>{
+            return val!="" && val!=" "
+          },message : "age is required"
+        }
+        
+      }
     },
     'development',
     {
-      name: 'john'
-    }
-  )
-
-  let dmodel = await compile(
-    {
-      name: { type: String }
-    },
-    'development',
-    {
-      name: 'jack'
+      name: "",
+      age : ""
     }
   )
 
   let result1 = await insert(cmodel)
   console.log(result1)
 
-  let result2 = await insert(dmodel)
-  console.log(result2)
+  // let result2 = await insert(dmodel)
+  // console.log(result2)
 }
 
 
 
-async function perform2 (data) {
-    let con = await connect('mongodb://localhost/demodb')
-    let cmodel = await compile(
-      {
-        name: { type: String }
-      },
-      'development',
-      {
-        name: 'john'
-      }
-    )
+// async function perform2 (data) {
+//     let con = await connect('mongodb://localhost/demodb')
+//     let cmodel = await compile(
+//       {
+//         name: { type: String }
+//       },
+//       'development',
+//       {
+//         name: 'john'
+//       }
+//     )
   
-    let dmodel = await compile(
-      {
-        name: { type: String }
-      },
-      'development',
-      {
-        name: 'jack'
-      }
-    )
+//     let dmodel = await compile(
+//       {
+//         name: { type: String }
+//       },
+//       'development',
+//       {
+//         name: 'jack'
+//       }
+//     )
   
-    let result1 = await insert(cmodel)
-    console.log(result1)
+//     let result1 = await insert(cmodel)
+//     console.log(result1)
   
-    let result2 = await insert(dmodel)
-    console.log(result2)
-  }
+//     let result2 = await insert(dmodel)
+//     console.log(result2)
+//   }
 
-// perform().catch((e)=>{
-//     console.log(e);
-// })
+perform().catch((e)=>{
+    // console.log(e);
+    showErrors(e);
+})
 
 // perform2().catch((e)=>{
 //     console.log(e);
@@ -121,5 +156,6 @@ module.exports = {
   connect : connect,
   compile : compile,
   insert : insert,
-  disconnect : disconnect
+  disconnect : disconnect,
+  showErrors : showErrors
 }
